@@ -1,6 +1,6 @@
 {
   "name": "@grani/game-framework",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A game framework with type script",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
