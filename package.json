@@ -5,12 +5,17 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "prepare": "npm run build",
-    "type": "tsc --noEmit",
     "test": "jest --coverage --passWithNoTests",
+    "format": "prettier --write \"src/**/*.ts\" ",
+    "build": "tsc",
+    "type": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\" "
+    "prepare": "yarn run build",
+    "prepublishOnly" : "yarn run test && yarn run lint",
+    "preversion " : "yarn run lint",
+    "version" : "yarn run format && git add -A src",
+    "postversion" : "git push && git push --tags"
+
   },
   "keywords": [
     "grani",
