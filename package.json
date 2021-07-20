@@ -4,10 +4,14 @@
   "description": "A game framework with type script",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
   "scripts": {
     "test": "jest --coverage --passWithNoTests",
     "format": "prettier --write \"src/**/*.ts\" ",
-    "build": "tsc -d",
+    "build": "tsc",
     "type": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "prepare": "yarn run build",
