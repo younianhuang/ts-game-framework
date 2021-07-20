@@ -5,9 +5,12 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "type": "tsc --noEmit",
+    "test": "jest --coverage --passWithNoTests",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\" "
   },
   "keywords": [
     "grani",
