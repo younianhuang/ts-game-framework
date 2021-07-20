@@ -6,7 +6,7 @@ babel.config.js
 webpack.config.js
 __tests__
 tests
-jest.config.js
+jest.config.ts
 gulpfile.babel.js
 .eslintrc.js
 **/configs/**
