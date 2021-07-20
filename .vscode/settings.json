@@ -9,12 +9,12 @@
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "prettier.configPath": ".prettierrc.js",
-    "editor.defaultFormatter": null,
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
     "[html]": {
       "editor.defaultFormatter": "vscode.html-language-features"
     },
     "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+      "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
     },
     "[css]": {
       "editor.formatOnSave": false
@@ -26,10 +26,10 @@
       "editor.formatOnSave": false
     },
     "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+      "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+      "editor.defaultFormatter": "vscode.json-language-features"
     },
     "eslint.options": {
       "configFile": "./.eslintrc.js"
