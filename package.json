@@ -1,5 +1,5 @@
 {
-  "name": "@grani/game-framework",
+  "name": "@younianhuang/game-framework",
   "version": "0.0.10",
   "description": "A game framework with type script",
   "main": "lib/index.js",
