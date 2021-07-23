@@ -5,9 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts",
-    "lib/index.d.ts"
+    "lib/**/*"
   ],
   "scripts": {
     "test": "jest --coverage --passWithNoTests",
@@ -16,6 +14,8 @@
     "type": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "prepare": "yarn run build",
+    "prepublishOnly": "yarn run test && yarn run lint",
+    "preversion ": "yarn run lint",
     "version": "yarn run format && git add -A src",
     "postversion": "git push && git push --tags"
   },
@@ -44,5 +44,8 @@
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rxjs": "^7.2.0",
+    "xstate": "^4.23.0"
+  }
 }
