@@ -1,6 +1,6 @@
 import { IModule } from './module';
 import { ModuleProvider } from './module-provider';
-import { Log, Logger, ConsoleAppender } from '../log';
+import { log, Logger, ConsoleAppender } from '../log';
 
 export class Core {
   private static _instance: Core;
@@ -23,10 +23,10 @@ export class Core {
   }
 
   public init(): void {
-    if (!Log.hasLogger('core')) {
+    if (!log.hasLogger('core')) {
       this._createDefaultLogger();
 
-      this._logger = Log.getLogger('core');
+      this._logger = log.getLogger('core');
     }
 
     this._logger?.info('Core initialize');
@@ -49,7 +49,7 @@ export class Core {
 
     this._logger?.info('Core destroy');
 
-    Log.dispose();
+    log.dispose();
   }
 
   public addModule(moduleName: string, module: IModule): void {
@@ -95,7 +95,7 @@ export class Core {
       },
     };
 
-    Log.registerAppender(ConsoleAppender.type, ConsoleAppender.create);
-    Log.configure(configuration);
+    log.registerAppender(ConsoleAppender.type, ConsoleAppender.create);
+    log.configure(configuration);
   }
 }

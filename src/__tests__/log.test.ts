@@ -1,4 +1,4 @@
-import { Log, IAppender, AppenderBase, ConsoleAppender, Levels, Logger } from '../log';
+import { log, IAppender, AppenderBase, ConsoleAppender, Levels, Logger } from '../log';
 
 class StringAppender extends AppenderBase {
   public value: string;
@@ -37,24 +37,24 @@ test('test game framework log system', () => {
   };
 
   /// register appenders
-  Log.registerAppender('console', ConsoleAppender.create);
-  Log.registerAppender('string', StringAppender.create);
+  log.registerAppender('console', ConsoleAppender.create);
+  log.registerAppender('string', StringAppender.create);
 
   expect(() => {
-    Log.registerAppender('test', null!);
+    log.registerAppender('test', null!);
   }).toThrow();
 
   expect(() => {
-    Log.registerAppender('console', ConsoleAppender.create);
+    log.registerAppender('console', ConsoleAppender.create);
   }).toThrow();
 
   /// config loggers
-  Log.configure(configuration);
+  log.configure(configuration);
 
-  const global = Log.getLogger('global') as Logger;
-  const network = Log.getLogger('network') as Logger;
-  const domain = Log.getLogger('domain') as Logger;
-  const ui = Log.getLogger('ui') as Logger;
+  const global = log.getLogger('global') as Logger;
+  const network = log.getLogger('network') as Logger;
+  const domain = log.getLogger('domain') as Logger;
+  const ui = log.getLogger('ui') as Logger;
 
   const globalAppender = global.getAppender('string') as StringAppender;
   const networkAppender = network.getAppender('string') as StringAppender;
@@ -118,19 +118,19 @@ test('test game framework log system', () => {
   global.log(Levels.fatal, 'enalbe');
   expect(globalAppender.value).toEqual('enalbe');
 
-  Log.enble = false;
+  log.enble = false;
   expect(global.enable).toEqual(false);
   expect(network.enable).toEqual(false);
   expect(domain.enable).toEqual(false);
   expect(ui.enable).toEqual(false);
 
-  Log.enble = true;
+  log.enble = true;
   expect(global.enable).toEqual(true);
   expect(network.enable).toEqual(true);
   expect(domain.enable).toEqual(true);
   expect(ui.enable).toEqual(true);
 
-  Log.dispose();
+  log.dispose();
   expect(globalAppender.value).toEqual('disposed');
   expect(networkAppender.value).toEqual('disposed');
   expect(domainAppender.value).toEqual('disposed');
