@@ -1,4 +1,5 @@
-import { log, IAppender, AppenderBase, ConsoleAppender, Levels, Logger } from '../log';
+import { log, IAppender, ConsoleAppender, Levels, Logger } from '../log';
+import { AppenderBase } from '../log/appender/appender';
 
 class StringAppender extends AppenderBase {
   public value: string;

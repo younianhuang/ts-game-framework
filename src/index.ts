@@ -1,11 +1,10 @@
-export { Core, IModule, BaseModule } from './core';
+export { Core, IModuleProvider, IModule } from './core';
 export { IEvent, EventEmitter } from './event';
 export {
   log,
   Levels,
   Logger,
   IAppender,
-  AppenderBase,
   ILoggerConfiguration,
   IAppenderConfiguration,
   IConfiguration,

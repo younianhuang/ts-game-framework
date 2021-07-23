@@ -1,2 +1,3 @@
 export { Core } from './core';
-export { IModule, BaseModule } from './module';
+export { IModule } from './module';
+export { IModuleProvider } from './module-provider';

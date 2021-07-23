@@ -1,4 +1,5 @@
-import { Core, BaseModule } from '../core';
+import { Core } from '../core';
+import { BaseModule } from '../core/module';
 
 class TestModule1 extends BaseModule {
   private _isInitialized = false;
