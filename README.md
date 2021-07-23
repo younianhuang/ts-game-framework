@@ -58,7 +58,7 @@ npm version major
 ```
 與publish package 相同的方法設定 registry 與認證。
 
-執行 yarn add pegacorn-grani/game-framework
+執行yarn add @pegacorn-grani/game-framework
 
 ```
 
@@ -66,6 +66,6 @@ npm version major
 ```
 與publish package 相同的方法設定 registry 與認證。
 
-執行 yarn upgrade pegacorn-grani/game-framework
+執行 yarn upgrade @pegacorn-grani/game-framework
 ```
 
