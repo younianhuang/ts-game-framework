@@ -13,7 +13,7 @@
     "build": "tsc",
     "type": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "prepare": "yarn run build && husky install",
+    "prepare": "yarn run build",
     "prepublishOnly": "yarn run test && yarn run lint",
     "preversion ": "yarn run lint",
     "version": "yarn run format && git add -A src",
