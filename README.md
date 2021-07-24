@@ -7,9 +7,11 @@ A lightweight, extendable game framework with typescript.
 下面兩種方法其中一種
 
 1.設定.npmrc
-//npm.pkg.github.com/:_authToken=[your token]
+將專案根目錄/.npmrc 或 ～/.npmrc，內容設定如下
 
-.npmrc 可放在專案根目錄或者個人的根目錄(~)下
+//npm.pkg.github.com/:_authToken=TOKEN
+
+TOKEN 為 github 的 personal access token
 
 2.npm login
 
@@ -17,30 +19,25 @@ A lightweight, extendable game framework with typescript.
 npm login --scope=@pegacorn-grani --registry=https://npm.pkg.github.com
 
 Username: USERNAME
-
 Password: TOKEN
-
 Email: PUBLIC-EMAIL-ADDRESS
 ```
 ### publish package
 
 ```
-首先先設定 registry 與認證，可使用下面兩種方法其中一種
+首先先設定認證，方法為 Authenticating to GitHub Packages 所述。
 
+接著設定 registry，可使用下面兩種方法其中一種
 
 1.   設定 .npmrc
 @pegacorn-grani:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=[your token]
 
-2.  設定 package.json + npm login
+2.  設定 package.json
 
 package.json 中增加
 "publishConfig": {
     "@pegacorn-grani:registry":"https://npm.pkg.github.com/"
 },
-
-然後執行 npm login
-
 
 執行
 npm publish
