@@ -5,8 +5,11 @@ public
 babel.config.js
 webpack.config.js
 __tests__
-tests
 jest.config.ts
 gulpfile.babel.js
 .eslintrc.js
 **/configs/**
+examples
+lib
+node_modules
+
