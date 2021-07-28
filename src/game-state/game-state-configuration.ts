@@ -1,11 +1,9 @@
-import { MachineConfig, EventObject, StateSchema } from 'xstate';
+import { MachineConfig, EventObject } from 'xstate';
 
-export interface IGameStateContext {
-  id?: string;
-}
-
-export type IGameStateSchema = StateSchema;
+//export interface IGameStateContext {}
 
 export type IGameStateEvent = EventObject;
 
-export type IGameStateConfig = MachineConfig<IGameStateContext, IGameStateSchema, EventObject>;
+//export type IGameStateConfig = MachineConfig<IGameStateContext, any, IGameStateEvent>;
+
+export type IGameStateConfig<TContext, TEvent extends IGameStateEvent> = MachineConfig<TContext, any, TEvent>;

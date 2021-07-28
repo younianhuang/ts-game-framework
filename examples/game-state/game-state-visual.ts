@@ -1,21 +1,5 @@
 import { createMachine, interpret, assign, Machine } from 'xstate';
 
-const gameSubStates = {
-  states: {
-    Init: {
-      on: {
-        Finished: 'Play',
-      },
-    },
-    Play: {
-      on: {
-        Next: 'Shutdown',
-      },
-    },
-    Shutdown: {},
-  },
-};
-
 const gameStateMachine = Machine(
   {
     id: 'SlotGame',
@@ -35,11 +19,18 @@ const gameStateMachine = Machine(
       },
       MainMenu: {
         initial: 'Init',
-        ...gameSubStates,
+        states: {
+          Init: {
+            on: {
+              Finished: 'Play',
+            },
+          },
+          Play: {},
+        },
         on: {
           Next: {
             target: 'ChooseGame',
-            in: '#SlotGame.MainMenu.Shutdown',
+            in: '#SlotGame.MainMenu.Play',
           },
         },
       },
@@ -73,7 +64,19 @@ const gameStateMachine = Machine(
       },
       PlayGame: {
         initial: 'Init',
-        ...gameSubStates,
+        states: {
+          Init: {
+            on: {
+              Finished: 'Play',
+            },
+          },
+          Play: {
+            on: {
+              Previous: 'Shutdown',
+            },
+          },
+          Shutdown: {},
+        },
         on: {
           Previous: {
             target: 'ChooseGame',
