@@ -26,7 +26,7 @@ const options = {
       return context.canTransit;
     },
   },
-}; */
+};
 const gameSubStates = {
   states: {
     Init: {
@@ -42,7 +42,7 @@ const gameSubStates = {
     Shutdown: {},
   },
 };
-
+*/
 export const GameStateConfig: MachineConfig<GameStateContext, any, GameStateEvent> = {
   id: 'SlotGame',
   initial: 'Launch',

@@ -1,34 +1,45 @@
-import { IGameState } from './game-state';
-import { IGameStateConfig, IGameStateEvent } from './game-state-configuration';
+import { IGameState, IGameStateFactory } from './game-state';
+import { IGameStateConfig, IGameStateEvent, GameEvent } from './game-state-configuration';
 import { GameFrameworkError } from '../util/game-framewrok-error';
-import { createMachine, Event, interpret, Interpreter, Typestate, State, MachineConfig, AnyEventObject } from 'xstate';
+import { createMachine, interpret, Interpreter, Typestate, State, StatesConfig } from 'xstate';
 
 export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
   private _id: string;
-  private _gameStates: Map<string, IGameState>;
-  private _service: Interpreter<TContext, any, TEvent, Typestate<TContext>> | undefined;
+  private _gameStateFactories: Map<string, IGameStateFactory<TContext, TEvent>>;
+  private _gameStates: Map<string, IGameState<TContext, TEvent>>;
+  private _service: Interpreter<TContext, any, TEvent, Typestate<TContext>> | null;
+  private _currentGameState: IGameState<TContext, TEvent> | undefined;
 
-  constructor(id: string) {
-    this._id = id;
-    this._gameStates = new Map<string, IGameState>();
+  constructor() {
+    this._id = '';
+    this._gameStateFactories = new Map<string, IGameStateFactory<TContext, TEvent>>();
+    this._gameStates = new Map<string, IGameState<TContext, TEvent>>();
+    this._service = null;
   }
-  public addState(state: IGameState): void {
-    if (this._gameStates.has(state.type)) {
-      throw new GameFrameworkError('state ' + state.type + ' already exists.');
-    }
-    this._gameStates.set(state.type, state);
+
+  public get id(): string {
+    return this._id;
   }
 
   /*
-  public configure(config: IGameStateConfig<any, TEvent>): void {
-    const machine = createMachine<TContext, TEvent>(config);
-    this._service = interpret(machine).onTransition(this._onTransition.bind(this));
+  public addGameStateFactory(type: string, factory: GameStateFactory<TContext, TEvent>): void {
+    this._gameStateFactories.set(type, factory);
   }
 */
+  public addGameStateFactory(factory: IGameStateFactory<TContext, TEvent>): void {
+    this._gameStateFactories.set(factory.name, factory);
+  }
+
   public configure(config: IGameStateConfig<any, TEvent>): void {
+    if (!config.id) {
+      throw new GameFrameworkError('config must have "id" field.');
+    }
+    this._id = config.id;
+
+    this._createGameStates(config.states);
+
     const machine = createMachine(config);
-    //this._service = interpret(machine);
-    //const machine = createMachine<TContext, TEvent, Typestate<TContext>>(config);
+
     this._service = interpret(machine).onTransition(this._onTransition.bind(this));
   }
 
@@ -36,14 +47,45 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
     this._service?.start();
   }
 
-  public sentEvent(event: Event<TEvent>): void {
+  public stop(): void {
+    this._service?.stop();
+  }
+
+  public send(event: GameEvent<TEvent>): void {
     this._service?.send(event);
+  }
+
+  public update(dt: number): void {
+    this._currentGameState?.update?.(dt);
   }
 
   private _onTransition(
     state: State<TContext, IGameStateEvent, any, Typestate<TContext>>,
     event: IGameStateEvent,
   ): void {
-    console.log(state.value);
+    this._currentGameState = this._gameStates.get(state.value.toString());
+    //console.log(state.value);
+  }
+  private _createGameStates(statesConfig: StatesConfig<TContext, any, TEvent> | undefined) {
+    if (!statesConfig) return;
+
+    Object.keys(statesConfig).forEach(key => {
+      const factory = this._gameStateFactories.get(key);
+      if (factory) {
+        const gameState = factory.create();
+
+        const stateConfig = statesConfig[key];
+
+        // bind actions
+        if (gameState.entry) stateConfig.entry = gameState.entry.bind(gameState);
+        if (gameState.exit) stateConfig.exit = gameState.exit.bind(gameState);
+        gameState.send = this.send.bind(this);
+
+        this._gameStates.set(key, gameState);
+
+        // create sub states
+        this._createGameStates(stateConfig.states);
+      }
+    });
   }
 }
