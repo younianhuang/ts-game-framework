@@ -2,7 +2,7 @@
 import { IGameState, IGameStateFactory } from './game-state';
 import { IGameStateConfig, IGameStateEvent, GameEvent } from './game-state-configuration';
 import { GameFrameworkError } from '../util/game-framewrok-error';
-import { createMachine, interpret, Interpreter, Typestate, State, StatesConfig } from 'xstate';
+import { createMachine, interpret, Interpreter, Typestate, State, StatesConfig, StateNodeConfig } from 'xstate';
 
 export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
   private _id: string;
@@ -58,11 +58,16 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
   private _onTransition(
     state: State<TContext, IGameStateEvent, any, Typestate<TContext>>,
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     event: IGameStateEvent,
   ): void {
-    this._currentGameState = this._gameStates.get(state.value.toString());
+    const names = state.toStrings();
+    const name = names[names.length - 1];
+
+    this._currentGameState = this._gameStates.get(name);
   }
-  private _createGameStates(statesConfig: StatesConfig<TContext, any, TEvent> | undefined) {
+
+  private _createGameStates(statesConfig: StatesConfig<TContext, any, TEvent> | undefined, parentName = '') {
     if (!statesConfig) return;
 
     Object.keys(statesConfig).forEach(key => {
@@ -72,16 +77,24 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
 
         const stateConfig = statesConfig[key];
 
-        // bind actions
-        if (gameState.entry) stateConfig.entry = gameState.entry.bind(gameState);
-        if (gameState.exit) stateConfig.exit = gameState.exit.bind(gameState);
-        gameState.send = this.send.bind(this);
+        this._bindGameStateActions(stateConfig, gameState);
 
-        this._gameStates.set(key, gameState);
+        const stateName = parentName.length > 0 ? parentName.concat('.', key) : key;
+
+        this._gameStates.set(stateName, gameState);
 
         // create sub states
-        this._createGameStates(stateConfig.states);
+        this._createGameStates(stateConfig.states, stateName);
       }
     });
+  }
+  private _bindGameStateActions(
+    stateConfig: StateNodeConfig<TContext, any, TEvent>,
+    gameState: IGameState<TContext, TEvent>,
+  ) {
+    // bind actions
+    if (gameState.entry) stateConfig.entry = gameState.entry.bind(gameState);
+    if (gameState.exit) stateConfig.exit = gameState.exit.bind(gameState);
+    gameState.send = this.send.bind(this);
   }
 }
