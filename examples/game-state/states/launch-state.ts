@@ -3,8 +3,8 @@ import { GameStateEvent } from '../event';
 import { GameStateContext } from '../context';
 import { SimpleGameState } from './simple-game-state';
 
-class InitState extends SimpleGameState {
-  public static readonly Name = 'Init';
+class LaunchState extends SimpleGameState {
+  public static readonly Name = 'Launch';
 
   constructor(name: string) {
     super(name);
@@ -20,16 +20,17 @@ class InitState extends SimpleGameState {
 
   update(dt: number): void {
     super.update(dt);
-    this.trigger('Finished');
+
+    this.trigger('Next');
   }
 }
 
-export class InitStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
+export class LaunchStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
   name: string;
   constructor() {
-    this.name = InitState.Name;
+    this.name = LaunchState.Name;
   }
-  create(): InitState {
-    return new InitState(this.name);
+  create(): LaunchState {
+    return new LaunchState(this.name);
   }
 }

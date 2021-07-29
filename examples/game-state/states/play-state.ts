@@ -3,8 +3,8 @@ import { GameStateEvent } from '../event';
 import { GameStateContext } from '../context';
 import { SimpleGameState } from './simple-game-state';
 
-class InitState extends SimpleGameState {
-  public static readonly Name = 'Init';
+class PlayState extends SimpleGameState {
+  public static readonly Name = 'Play';
 
   constructor(name: string) {
     super(name);
@@ -24,12 +24,12 @@ class InitState extends SimpleGameState {
   }
 }
 
-export class InitStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
+export class PlayStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
   name: string;
   constructor() {
-    this.name = InitState.Name;
+    this.name = PlayState.Name;
   }
-  create(): InitState {
-    return new InitState(this.name);
+  create(): PlayState {
+    return new PlayState(this.name);
   }
 }

@@ -3,8 +3,10 @@ import { GameStateEvent } from '../event';
 import { GameStateContext } from '../context';
 import { SimpleGameState } from './simple-game-state';
 
-class InitState extends SimpleGameState {
-  public static readonly Name = 'Init';
+class ShutdownState extends SimpleGameState {
+  public static readonly Name = 'Shutdown';
+
+  private _event: GameStateEvent | undefined;
 
   constructor(name: string) {
     super(name);
@@ -12,6 +14,7 @@ class InitState extends SimpleGameState {
 
   entry(context: GameStateContext, event: GameStateEvent): void {
     super.entry(context, event);
+    this._event = event;
   }
 
   exit(context: GameStateContext, event: GameStateEvent): void {
@@ -20,16 +23,16 @@ class InitState extends SimpleGameState {
 
   update(dt: number): void {
     super.update(dt);
-    this.trigger('Finished');
+    if (this._event) this.trigger(this._event);
   }
 }
 
-export class InitStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
+export class ShutdownStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
   name: string;
   constructor() {
-    this.name = InitState.Name;
+    this.name = ShutdownState.Name;
   }
-  create(): InitState {
-    return new InitState(this.name);
+  create(): ShutdownState {
+    return new ShutdownState(this.name);
   }
 }

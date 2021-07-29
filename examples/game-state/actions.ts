@@ -1,5 +1,5 @@
 import { assign } from 'xstate';
-import { GameStateEvent } from './events';
+import { GameStateEvent } from './event';
 import { GameStateContext } from './context';
 /*
 const disalbeTransit = assign<IGameStateContext>({
