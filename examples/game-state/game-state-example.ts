@@ -1,47 +1,12 @@
-import { createMachine, MachineConfig, interpret, assign, Interpreter, Typestate, Machine } from 'xstate';
 import { GameStateConfig } from './configuation';
 import { GameStateContext } from './context';
 import { GameStateEvent } from './events';
-
-import { IGameState, IGameStateFactory, GameStateMachine, GameEvent } from '../../src/game-state';
-
-class SimpleGameState implements IGameState<GameStateContext, GameStateEvent> {
-  private _name: string;
-
-  constructor(name: string) {
-    this._name = name;
-  }
-
-  entry(context: GameStateContext, event: GameStateEvent): void {
-    console.log(event.type + ' => ' + this._name + ' entry');
-
-    //this.send?.('Next');
-  }
-
-  exit(context: GameStateContext, event: GameStateEvent): void {
-    console.log(event.type + ' => ' + this._name + ' exit');
-  }
-
-  update(dt: number): void {
-    console.log('State ' + this._name + ' update');
-  }
-
-  send: ((event: GameEvent<GameStateEvent>) => void) | undefined;
-}
-
-class SimeGameStateFactory implements IGameStateFactory<GameStateContext, GameStateEvent> {
-  name: string;
-
-  constructor(name: string) {
-    this.name = name;
-  }
-
-  create(): SimpleGameState {
-    return new SimpleGameState(this.name);
-  }
-}
+import { IGameState, IGameStateFactory, GameStateMachine, GameEvent, GameStateModule } from '../../src/game-state';
+import { SimeGameStateFactory } from './states/simple-game-state';
 
 function main(): void {
+  const module = new GameStateModule();
+
   const stateMachine = new GameStateMachine<GameStateContext, GameStateEvent>();
 
   stateMachine.addGameStateFactory(new SimeGameStateFactory('Launch'));
@@ -53,11 +18,21 @@ function main(): void {
   stateMachine.addGameStateFactory(new SimeGameStateFactory('Shutdown'));
 
   stateMachine.configure(GameStateConfig);
-  stateMachine.start();
-  stateMachine.send('Next');
-  stateMachine.send('Finished');
 
-  stateMachine.stop();
+  module.addStateMachine(stateMachine);
+
+  module.init();
+
+  stateMachine.send('Next');
+
+  module.tick(0);
+
+  //module.destroy();
+  //stateMachine.start();
+  //stateMachine.send('Next');
+  //stateMachine.send('Finished');
+
+  //stateMachine.stop();
 }
 
 main();

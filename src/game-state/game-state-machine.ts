@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IGameState, IGameStateFactory } from './game-state';
 import { IGameStateConfig, IGameStateEvent, GameEvent } from './game-state-configuration';
 import { GameFrameworkError } from '../util/game-framewrok-error';
@@ -21,11 +22,6 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
     return this._id;
   }
 
-  /*
-  public addGameStateFactory(type: string, factory: GameStateFactory<TContext, TEvent>): void {
-    this._gameStateFactories.set(type, factory);
-  }
-*/
   public addGameStateFactory(factory: IGameStateFactory<TContext, TEvent>): void {
     this._gameStateFactories.set(factory.name, factory);
   }
@@ -61,10 +57,10 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
 
   private _onTransition(
     state: State<TContext, IGameStateEvent, any, Typestate<TContext>>,
+
     event: IGameStateEvent,
   ): void {
     this._currentGameState = this._gameStates.get(state.value.toString());
-    //console.log(state.value);
   }
   private _createGameStates(statesConfig: StatesConfig<TContext, any, TEvent> | undefined) {
     if (!statesConfig) return;

@@ -4,7 +4,7 @@ export interface IModule {
   init(): void;
   tick(dt: number): void;
   destroy(): void;
-  getprovider(): void;
+  getprovider(): IModuleProvider | undefined;
   setProvider(provider: IModuleProvider): void;
 }
 
