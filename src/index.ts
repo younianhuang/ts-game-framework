@@ -12,3 +12,11 @@ export {
 } from './log';
 
 export { GameFrameworkError, isFunction } from './util';
+export {
+  IGameState,
+  IGameStateFactory,
+  IGameStateEvent,
+  IGameStateMachine,
+  GameStateMachine,
+  GameStateModule,
+} from './game-state';
