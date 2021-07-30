@@ -35,5 +35,6 @@ export class GameStateModule implements IModule {
     this._gameStateMachines.forEach(machine => {
       machine.stop();
     });
+    this._gameStateMachines.length = 0;
   }
 }

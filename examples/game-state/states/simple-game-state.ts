@@ -10,22 +10,24 @@ export class SimpleGameState implements IGameState<GameStateContext, GameStateEv
   }
 
   entry(context: GameStateContext, event: GameStateEvent): void {
-    console.log(this._name + '.entry');
+    context.previousEntryState = this._name;
+    //console.log(this._name + '.entry');
   }
 
   exit(context: GameStateContext, event: GameStateEvent): void {
-    console.log(this._name + '.exit');
+    context.previouseExitState = this._name;
+    //console.log(this._name + '.exit');
   }
 
   update(dt: number): void {
-    console.log(this._name + '.update');
+    //console.log(this._name + '.update');
   }
 
   send: ((event: GameEvent<GameStateEvent>) => void) | undefined;
 
   trigger(event: GameEvent<GameStateEvent>): void {
-    console.log('trigger event =>');
-    console.log(event);
+    //console.log('trigger event =>');
+    //console.log(event);
     this.send?.(event);
   }
 }

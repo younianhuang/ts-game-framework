@@ -6,7 +6,7 @@ import { SimpleGameState } from './simple-game-state';
 class ShutdownState extends SimpleGameState {
   public static readonly Name = 'Shutdown';
 
-  private _event: GameStateEvent | undefined;
+  private _previousEvent: GameStateEvent | undefined;
 
   constructor(name: string) {
     super(name);
@@ -14,7 +14,7 @@ class ShutdownState extends SimpleGameState {
 
   entry(context: GameStateContext, event: GameStateEvent): void {
     super.entry(context, event);
-    this._event = event;
+    this._previousEvent = event;
   }
 
   exit(context: GameStateContext, event: GameStateEvent): void {
@@ -23,7 +23,7 @@ class ShutdownState extends SimpleGameState {
 
   update(dt: number): void {
     super.update(dt);
-    if (this._event) this.trigger(this._event);
+    if (this._previousEvent) this.trigger(this._previousEvent);
   }
 }
 

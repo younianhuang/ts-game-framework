@@ -1,12 +1,13 @@
-import { MachineConfig } from 'xstate';
 import { GameStateEvent } from './event';
 import { GameStateContext } from './context';
+import { IGameStateConfig } from '../../src/game-state';
 
-export const GameStateConfig: MachineConfig<GameStateContext, any, GameStateEvent> = {
+export const GameStateConfig: IGameStateConfig<GameStateContext, GameStateEvent> = {
   id: 'SlotGame',
   initial: 'Launch',
   context: {
-    canTransit: true,
+    previousEntryState: '',
+    previouseExitState: '',
   },
   states: {
     Launch: {

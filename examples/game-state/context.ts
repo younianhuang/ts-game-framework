@@ -1,3 +1,4 @@
 export interface GameStateContext {
-  canTransit: boolean;
+  previousEntryState: string;
+  previouseExitState: string;
 }

@@ -8,14 +8,15 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
   private _id: string;
   private _gameStateFactories: Map<string, IGameStateFactory<TContext, TEvent>>;
   private _gameStates: Map<string, IGameState<TContext, TEvent>>;
-  private _service: Interpreter<TContext, any, TEvent, Typestate<TContext>> | null;
+  private _service: Interpreter<TContext, any, TEvent, Typestate<TContext>> | undefined;
   private _currentGameState: IGameState<TContext, TEvent> | undefined;
+  private _currentStateFullName: string | undefined;
+  private _context: TContext | undefined;
 
   constructor() {
     this._id = '';
     this._gameStateFactories = new Map<string, IGameStateFactory<TContext, TEvent>>();
     this._gameStates = new Map<string, IGameState<TContext, TEvent>>();
-    this._service = null;
   }
 
   public get id(): string {
@@ -36,6 +37,8 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
 
     const machine = createMachine(config);
 
+    this._context = machine.context;
+
     this._service = interpret(machine).onTransition(this._onTransition.bind(this));
   }
 
@@ -55,6 +58,14 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
     this._currentGameState?.update?.(dt);
   }
 
+  public getCurrentStateFullName(): string | undefined {
+    return this._currentStateFullName;
+  }
+
+  public getContext(): TContext | undefined {
+    return this._context;
+  }
+
   private _onTransition(
     state: State<TContext, IGameStateEvent, any, Typestate<TContext>>,
 
@@ -62,9 +73,9 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
     event: IGameStateEvent,
   ): void {
     const names = state.toStrings();
-    const name = names[names.length - 1];
+    this._currentStateFullName = names[names.length - 1];
 
-    this._currentGameState = this._gameStates.get(name);
+    this._currentGameState = this._gameStates.get(this._currentStateFullName);
   }
 
   private _createGameStates(statesConfig: StatesConfig<TContext, any, TEvent> | undefined, parentName = '') {
