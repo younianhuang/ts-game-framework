@@ -13,6 +13,8 @@ export {
 
 export { GameFrameworkError, isFunction } from './util';
 export {
+  GameEvent,
+  IGameStateConfig,
   IGameState,
   IGameStateFactory,
   IGameStateEvent,
