@@ -30,6 +30,8 @@ abstract class BaseModule implements IModule {
 }
 
 class TestModule1 extends BaseModule {
+  public isAfterInitDone: boolean = false;
+
   get name(): string {
     return 'test1';
   }
@@ -39,6 +41,10 @@ class TestModule1 extends BaseModule {
   }
   tick(dt: number): void {}
   destroy(): void {}
+
+  afterInit(): void {
+    this.isAfterInitDone = true;
+  }
 }
 
 class TestModule2 extends BaseModule {
@@ -61,6 +67,7 @@ test('test game framework core', () => {
 
   core.addModule(testModule1);
   core.addModule(testModule2);
+  core.addAfterInitTask(testModule1.afterInit.bind(testModule1));
   expect(core.hasModule('test1')).toBeTruthy();
   expect(core.hasModule('test2')).toBeTruthy();
 
@@ -75,6 +82,7 @@ test('test game framework core', () => {
 
   expect(testModule1.isInitialized()).toBeTruthy();
   expect(testModule2.isInitialized()).toBeTruthy();
+  expect(testModule1.isAfterInitDone).toBeTruthy();
 
   expect(testModule1.getprovider()).toEqual(core);
   expect(testModule2.getprovider()).toEqual(core);
