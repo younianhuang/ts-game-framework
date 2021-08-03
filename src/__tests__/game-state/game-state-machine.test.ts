@@ -9,6 +9,7 @@ import {
   PlayStateFactory,
   ShutdownStateFactory,
 } from '../../../examples/game-state';
+import { GameFrameworkError } from '../../util';
 
 test('test GameStateMachine', () => {
   const stateMachine = new GameStateMachine<GameStateContext, GameStateEvent>();
@@ -20,6 +21,8 @@ test('test GameStateMachine', () => {
   stateMachine.addGameStateFactory(new InitStateFactory());
   stateMachine.addGameStateFactory(new PlayStateFactory());
   stateMachine.addGameStateFactory(new ShutdownStateFactory());
+
+  expect(() => stateMachine.addGameStateFactory(new LaunchStateFactory())).toThrow(GameFrameworkError);
 
   stateMachine.configure(GameStateConfig);
 

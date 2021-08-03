@@ -24,6 +24,9 @@ export class GameStateMachine<TContext, TEvent extends IGameStateEvent> {
   }
 
   public addGameStateFactory(factory: IGameStateFactory<TContext, TEvent>): void {
+    if (this._gameStateFactories.has(factory.name)) {
+      throw new GameFrameworkError('Factory ' + factory.name + ' already exists!');
+    }
     this._gameStateFactories.set(factory.name, factory);
   }
 
