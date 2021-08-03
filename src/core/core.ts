@@ -2,16 +2,16 @@ import { IModule } from './module';
 import { IModuleProvider } from './module-provider';
 import { log, Logger, ConsoleAppender } from '../log';
 import { GameFrameworkError } from '../util';
+import { EventEmitter } from '../event';
+import { ICoreEvent, BeforeInitEvent, AfterInitEvent } from './core-event';
 
-type AfterInitTask = () => void;
-export class Core implements IModuleProvider {
+export class Core extends EventEmitter<ICoreEvent> implements IModuleProvider {
   private readonly _modules: Map<string, IModule>;
-  private readonly _afterInitTasks: Array<AfterInitTask>;
   private _logger: Logger | undefined | null;
 
   constructor() {
+    super();
     this._modules = new Map<string, IModule>();
-    this._afterInitTasks = new Array<AfterInitTask>();
     this._logger = null;
   }
 
@@ -22,13 +22,15 @@ export class Core implements IModuleProvider {
       this._logger = log.getLogger('core');
     }
 
+    this._emitEvent(new BeforeInitEvent());
+
     this._logger?.info('Core initialize');
 
     this._modules.forEach((module: IModule) => {
       module.init();
     });
 
-    this._onAfterInit();
+    this._emitEvent(new AfterInitEvent());
   }
 
   public tick(dt: number): void {
@@ -75,18 +77,6 @@ export class Core implements IModuleProvider {
 
   public hasModule(moduleName: string): boolean {
     return this._modules.has(moduleName);
-  }
-
-  public addAfterInitTask(task: AfterInitTask): void {
-    this._afterInitTasks.push(task);
-  }
-
-  private _onAfterInit(): void {
-    this._afterInitTasks.forEach(task => {
-      task();
-    });
-
-    this._afterInitTasks.length = 0;
   }
 
   private _createDefaultLogger(): void {

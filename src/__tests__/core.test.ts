@@ -1,4 +1,4 @@
-import { core, IModule, IModuleProvider } from '../core';
+import { core, IModule, IModuleProvider, BeforeInitEvent } from '../core';
 import { GameFrameworkError } from '../util';
 
 type ModuleNames = 'test1' | 'test2';
@@ -30,7 +30,7 @@ abstract class BaseModule implements IModule {
 }
 
 class TestModule1 extends BaseModule {
-  public isAfterInitDone: boolean = false;
+  public isBeforeInitDone: boolean = false;
 
   get name(): string {
     return 'test1';
@@ -41,10 +41,6 @@ class TestModule1 extends BaseModule {
   }
   tick(dt: number): void {}
   destroy(): void {}
-
-  afterInit(): void {
-    this.isAfterInitDone = true;
-  }
 }
 
 class TestModule2 extends BaseModule {
@@ -67,7 +63,6 @@ test('test game framework core', () => {
 
   core.addModule(testModule1);
   core.addModule(testModule2);
-  core.addAfterInitTask(testModule1.afterInit.bind(testModule1));
   expect(core.hasModule('test1')).toBeTruthy();
   expect(core.hasModule('test2')).toBeTruthy();
 
@@ -78,11 +73,17 @@ test('test game framework core', () => {
   expect(core.getModule('test1') as TestModule1).toEqual(testModule1);
   expect(core.getModule('test2') as TestModule2).toEqual(testModule2);
 
+  core.subscribe(event => {
+    if (event.name === BeforeInitEvent.Name) {
+      testModule1.isBeforeInitDone = true;
+    }
+  });
+
   core.init();
 
   expect(testModule1.isInitialized()).toBeTruthy();
   expect(testModule2.isInitialized()).toBeTruthy();
-  expect(testModule1.isAfterInitDone).toBeTruthy();
+  expect(testModule1.isBeforeInitDone).toBeTruthy();
 
   expect(testModule1.getprovider()).toEqual(core);
   expect(testModule2.getprovider()).toEqual(core);
