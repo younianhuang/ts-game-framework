@@ -1,4 +1,4 @@
-import { Core } from './core';
+//import { Core } from './core';
 import { IModule } from './module';
 
 export interface IModuleProvider {
@@ -6,6 +6,7 @@ export interface IModuleProvider {
   hasModule(moduleName: string): boolean;
 }
 
+/*
 export class ModuleProvider implements IModuleProvider {
   private _core: Core;
   constructor(core: Core) {
@@ -18,3 +19,4 @@ export class ModuleProvider implements IModuleProvider {
     return this._core.hasModule(moduleName);
   }
 }
+*/

@@ -1,25 +1,15 @@
 import { IModule } from './module';
-import { ModuleProvider } from './module-provider';
+import { IModuleProvider } from './module-provider';
 import { log, Logger, ConsoleAppender } from '../log';
+import { GameFrameworkError } from '../util';
 
-export class Core {
-  private static _instance: Core;
-  private readonly _provider: ModuleProvider;
-  private readonly _allModules: Map<string, IModule>;
+class Core implements IModuleProvider {
+  private readonly _modules: Map<string, IModule>;
   private _logger: Logger | undefined | null;
 
   constructor() {
-    this._provider = new ModuleProvider(this);
-    this._allModules = new Map<string, IModule>();
+    this._modules = new Map<string, IModule>();
     this._logger = null;
-  }
-
-  public static getCore(): Core {
-    if (!this._instance) {
-      this._instance = new Core();
-    }
-
-    return this._instance;
   }
 
   public init(): void {
@@ -31,19 +21,19 @@ export class Core {
 
     this._logger?.info('Core initialize');
 
-    this._allModules.forEach((module: IModule) => {
+    this._modules.forEach((module: IModule) => {
       module.init();
     });
   }
 
   public tick(dt: number): void {
-    this._allModules.forEach((module: IModule) => {
+    this._modules.forEach((module: IModule) => {
       module.tick(dt);
     });
   }
 
   public destroy(): void {
-    this._allModules.forEach((module: IModule) => {
+    this._modules.forEach((module: IModule) => {
       module.destroy();
     });
 
@@ -52,37 +42,34 @@ export class Core {
     log.dispose();
   }
 
-  public addModule(moduleName: string, module: IModule): void {
-    //const moduleName: string = module.constructor.name;
-
-    if (this.hasModule(moduleName)) {
-      console.warn('This module already exists! : ' + moduleName);
-      return;
+  public addModule(module: IModule): void {
+    if (this.hasModule(module.name)) {
+      throw new GameFrameworkError('Module ' + module.name + ' already exists!');
     }
 
-    module.setProvider(this._provider);
+    module.setProvider(this);
 
-    this._allModules.set(moduleName, module);
+    this._modules.set(module.name, module);
   }
 
   public removeModule(moduleName: string): void {
     if (!this.hasModule(moduleName)) {
-      return;
+      throw new GameFrameworkError('Module ' + moduleName + ' does not exists!');
     }
 
-    this._allModules.delete(moduleName);
+    this._modules.delete(moduleName);
   }
 
-  public getModule(moduleName: string): IModule | undefined {
+  public getModule(moduleName: string): IModule {
     if (!this.hasModule(moduleName)) {
-      return undefined;
+      throw new GameFrameworkError('Module ' + moduleName + ' does not already exists!');
     }
 
-    return this._allModules.get(moduleName);
+    return this._modules.get(moduleName) as IModule;
   }
 
   public hasModule(moduleName: string): boolean {
-    return this._allModules.has(moduleName);
+    return this._modules.has(moduleName);
   }
 
   private _createDefaultLogger(): void {
@@ -99,3 +86,5 @@ export class Core {
     log.configure(configuration);
   }
 }
+
+export const core = new Core();

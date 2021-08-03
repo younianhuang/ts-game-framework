@@ -1,4 +1,4 @@
-export { Core, IModuleProvider, IModule } from './core';
+export { core, IModuleProvider, IModule, INameable } from './core';
 export { IEvent, EventEmitter } from './event';
 export {
   log,

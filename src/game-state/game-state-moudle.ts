@@ -5,6 +5,10 @@ export class GameStateModule implements IModule {
   private _provider: IModuleProvider | undefined;
   private _gameStateMachines: Array<IGameStateMachine>;
 
+  get name(): string {
+    return 'GameState';
+  }
+
   constructor() {
     this._gameStateMachines = new Array<IGameStateMachine>();
   }
