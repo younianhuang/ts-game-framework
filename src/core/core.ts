@@ -3,7 +3,7 @@ import { IModuleProvider } from './module-provider';
 import { log, Logger, ConsoleAppender } from '../log';
 import { GameFrameworkError } from '../util';
 
-class Core implements IModuleProvider {
+export class Core implements IModuleProvider {
   private readonly _modules: Map<string, IModule>;
   private _logger: Logger | undefined | null;
 
