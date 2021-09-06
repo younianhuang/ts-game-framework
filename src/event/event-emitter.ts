@@ -3,7 +3,7 @@ import { isFunction, GameFrameworkError } from '../util';
 import { Observer, Observable, Subscription, Subject } from 'rxjs';
 import { share } from 'rxjs/operators';
 
-export abstract class EventEmitter<T extends IEvent> {
+export class EventEmitter<T extends IEvent> {
   private readonly _subject: Subject<T>;
   private readonly _observable: Observable<T>;
 
