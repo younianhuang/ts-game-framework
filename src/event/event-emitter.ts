@@ -7,7 +7,7 @@ export class EventEmitter<T extends IEvent> {
   private readonly _subject: Subject<T>;
   private readonly _observable: Observable<T>;
 
-  protected constructor() {
+  constructor() {
     this._subject = new Subject<T>();
     this._observable = this._subject.asObservable().pipe(share());
   }
