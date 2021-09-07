@@ -26,7 +26,7 @@ export class EventEmitter<T extends IEvent> {
     return this._observable;
   }
 
-  protected _emitEvent(event: T): void {
+  public emitEvent(event: T): void {
     if (event.name === undefined || event.name === null) {
       throw new GameFrameworkError('An event must have a name.');
     }
@@ -34,7 +34,7 @@ export class EventEmitter<T extends IEvent> {
     this._subject.next(event);
   }
 
-  protected _completeEvent(): void {
+  public completeEvent(): void {
     this._subject.complete();
   }
 }

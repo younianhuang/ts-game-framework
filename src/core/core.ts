@@ -22,7 +22,7 @@ export class Core extends EventEmitter<ICoreEvent> implements IModuleProvider {
       this._logger = log.getLogger('core');
     }
 
-    this._emitEvent(new BeforeInitEvent());
+    this.emitEvent(new BeforeInitEvent());
 
     this._logger?.info('Core initialize');
 
@@ -30,7 +30,7 @@ export class Core extends EventEmitter<ICoreEvent> implements IModuleProvider {
       module.init();
     });
 
-    this._emitEvent(new AfterInitEvent());
+    this.emitEvent(new AfterInitEvent());
   }
 
   public tick(dt: number): void {

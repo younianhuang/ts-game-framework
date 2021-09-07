@@ -1,4 +1,5 @@
 import { IEvent, EventEmitter } from '../event';
+import { Observer, Observable, Subscription, Subject } from 'rxjs';
 
 enum NetworkConnectionState {
   DISCONNECTED,
@@ -51,6 +52,33 @@ class NetworkConnection extends EventEmitter<INetworkEvent> {
   }
 
   public connect() {
+    this.emitEvent(new ConnectingEvent());
+    setTimeout(() => {
+      this.emitEvent(new ConnectedEvent());
+    }, 200);
+  }
+
+  public disconnect() {
+    this.emitEvent(new DisconnectedEvent());
+  }
+
+  public connectWithError(erroCode: number) {
+    this.emitEvent(new NetworkErrorEvent(erroCode));
+  }
+
+  public dispose(): void {
+    this.completeEvent();
+  }
+}
+
+class NetworkConnectionEmbedded {
+  private _emitter: EventEmitter<INetworkEvent>;
+
+  constructor() {
+    this._emitter = new EventEmitter<INetworkEvent>();
+  }
+
+  public connect() {
     this._emitEvent(new ConnectingEvent());
     setTimeout(() => {
       this._emitEvent(new ConnectedEvent());
@@ -66,7 +94,19 @@ class NetworkConnection extends EventEmitter<INetworkEvent> {
   }
 
   public dispose(): void {
-    this._completeEvent();
+    this._emitter.completeEvent();
+  }
+
+  public subscribe(observerOrNext: Partial<Observer<INetworkEvent>> | ((value: INetworkEvent) => void)): Subscription {
+    return this._emitter.subscribe(observerOrNext);
+  }
+
+  public asObservable(): Observable<INetworkEvent> {
+    return this._emitter.asObservable();
+  }
+
+  private _emitEvent(event: INetworkEvent) {
+    this._emitter.emitEvent(event);
   }
 }
 
@@ -104,8 +144,49 @@ class NetworkConnectionObserver {
   //public complete(): void {}
 }
 
-test('test game framework event emitter', done => {
+test('test event emitter', done => {
   const connection = new NetworkConnection();
+
+  const observer1 = new NetworkConnectionObserver();
+  const observer2 = new NetworkConnectionObserver();
+
+  connection.subscribe(observer1);
+  const subscription2 = connection.asObservable().subscribe(observer2.next);
+
+  connection.subscribe(event => {
+    if (event.name === ConnectedEvent.Name) {
+      connection.disconnect();
+      expect(observer1.state).toEqual(NetworkConnectionState.DISCONNECTED);
+
+      connection.dispose();
+      connection.connect();
+      expect(observer1.state).toEqual(NetworkConnectionState.DISCONNECTED);
+
+      done();
+    }
+  });
+
+  expect(observer1.state).toEqual(NetworkConnectionState.DISCONNECTED);
+
+  connection.connectWithError(NetworkError.ServerNotFound);
+  expect(observer1.state).toEqual(NetworkConnectionState.ERROR);
+  expect(observer1.errorCode).toEqual(NetworkError.ServerNotFound);
+  expect(observer2.state).toEqual(NetworkConnectionState.ERROR);
+
+  const observer3 = new NetworkConnectionObserver();
+  // make sure observer only receive event after subscribing
+  const subscription3 = connection.subscribe(observer3);
+  expect(observer3.state).toEqual(NetworkConnectionState.DISCONNECTED);
+
+  subscription2.unsubscribe();
+  subscription3.unsubscribe();
+  connection.connect();
+  expect(observer1.state).toEqual(NetworkConnectionState.CONNECTING);
+  expect(observer2.state).toEqual(NetworkConnectionState.ERROR);
+}, 1000);
+
+test('test event emitter with embedded', done => {
+  const connection = new NetworkConnectionEmbedded();
 
   const observer1 = new NetworkConnectionObserver();
   const observer2 = new NetworkConnectionObserver();
