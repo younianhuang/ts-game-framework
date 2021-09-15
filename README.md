@@ -1,4 +1,4 @@
-# game-framework
+# grani-ts
 
 A lightweight, extendable game framework with typescript.
 ***

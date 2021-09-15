@@ -1,5 +1,5 @@
 {
-  "name": "@pegacorn-grani/game-framework",
+  "name": "@pegacorn/grani-ts",
   "version": "0.3.7",
   "description": "A game framework with type script",
   "main": "lib/index.js",
@@ -20,8 +20,7 @@
     "postversion": "git push && git push --tags"
   },
   "keywords": [
-    "grani",
-    "game-framework"
+    "grani"
   ],
   "author": "Nolan Master",
   "license": "ISC",
