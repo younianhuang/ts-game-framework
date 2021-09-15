@@ -1,6 +1,6 @@
 {
   "name": "@pegacorn/grani-ts",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "A game framework with type script",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
