@@ -2,67 +2,48 @@
 
 A lightweight, extendable game framework with typescript.
 ***
-### Authenticating to GitHub Packages
-```
-下面兩種方法其中一種
+## 發布套件
 
-1.設定.npmrc
-將專案根目錄/.npmrc 或 ～/.npmrc，內容設定如下
+完整的說明請參考
+https://docs.gitlab.com/ee/user/packages/npm_registry/
 
-//npm.pkg.github.com/:_authToken=TOKEN
+### Authenticating to the Package Registry
+1. 產生 personal access token，必須啟用two-factor authentication，scope api 要打開。
+2. 設定 npm configuration
 
-TOKEN 為 github 的 personal access token
+    執行
 
-2.npm login
+    npm config set @pegacorn:registry https://gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/
+    npm config set -- '//gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/:_authToken' "<your_token>"
 
-執行下列指令
-npm login --scope=@pegacorn-grani --registry=https://npm.pkg.github.com
+    或者更改 home 或專案目錄下的 .npmrc
+    @pegacorn:registry=https://gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/
+    //gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/:_authToken=<your_token>
 
-Username: USERNAME
-Password: TOKEN
-Email: PUBLIC-EMAIL-ADDRESS
-```
 ### publish package
 
-```
-首先先設定認證，方法為 Authenticating to GitHub Packages 所述。
-
-接著設定 registry，可使用下面兩種方法其中一種
-
-1.   設定 .npmrc
-@pegacorn-grani:registry=https://npm.pkg.github.com
-
-2.  設定 package.json
-
-package.json 中增加
-"publishConfig": {
-    "@pegacorn-grani:registry":"https://npm.pkg.github.com/"
-},
-
 執行
+
 npm publish
-發佈版本
-```
 
 ### upate package version
-```
+
 執行
+
 npm version patch  或者
+
 npm version minor  或者
+
 npm version major
-```
 ### install package
-```
-與publish package 相同的方法設定 registry 與認證。
 
-執行yarn add @pegacorn-grani/game-framework
+執行yarn add @pegacorn/grani-ts
 
-```
 
 ### upgrade package
-```
-與publish package 相同的方法設定 registry 與認證。
 
-執行 yarn upgrade @pegacorn-grani/game-framework
-```
 
+執行 yarn upgrade @pegacorn/grani-ts
+
+
+***
