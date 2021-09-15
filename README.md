@@ -26,7 +26,9 @@ https://docs.gitlab.com/ee/user/packages/npm_registry/
     npm config set @pegacorn:registry https://gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/
     npm config set -- '//gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/:_authToken' "<your_token>"
 
-    或者更改 home 或專案目錄下的 .npmrc
+    或者
+
+    更改 home 或專案根目錄下的 .npmrc
     @pegacorn:registry=https://gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/
     //gftygitlab.awoplay.com/api/v4/projects/311/packages/npm/:_authToken=<your_token>
 
