@@ -6,9 +6,16 @@ A lightweight, extendable game framework with typescript.
 
 完整的說明請參考
 https://docs.gitlab.com/ee/user/packages/npm_registry/
-
 ### Authenticating to the Package Registry
 1. 產生 personal access token，必須啟用two-factor authentication，scope api 要打開。
+
+    * 注意
+      開啟 two-factor authentication後，必須用有 write_repository scope 才能 push。
+
+      解決方法
+      1.執行 git config --global credential.helper store
+      2.在push或 pull時會提示輸入帳號密碼，將密碼輸入 access token
+
 2. 設定 npm configuration
 
     執行
