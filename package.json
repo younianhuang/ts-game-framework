@@ -1,5 +1,5 @@
 {
-  "name": "@pegcornteam/grani-ts",
+  "name": "@pegacorn-grani/grani-ts",
   "version": "0.3.11",
   "description": "A game framework with type script",
   "main": "lib/index.js",
@@ -24,9 +24,6 @@
   ],
   "author": "Nolan Master",
   "license": "ISC",
-  "publishConfig": {
-    "@pegacorn-grani:registry": "https://npm.pkg.github.com/"
-  },
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.28.3",

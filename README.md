@@ -60,3 +60,14 @@ npm version major
 
 
 ***
+
+## 發佈到 Github package
+
+### .npmrc 設定
+@pegacorn-grani:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=Token
+
+### package.json 設定
+將package.json設定為
+"name": "@pegacorn-grani/grani-ts",
+
